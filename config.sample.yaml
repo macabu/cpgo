@@ -1,0 +1,8 @@
+---
+backends:
+- url: http://localhost:6060/debug/pprof/profile?seconds=30
+  schedule: '* * * * *' # https://crontab.guru/
+  open_pull_request:
+    repository: http://github.com/my-org/my-repo
+    target_file: default.pgo
+    target_branch: main
