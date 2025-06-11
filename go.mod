@@ -1,6 +1,6 @@
 module github.com/macabu/cpgo
 
-go 1.20
+go 1.23.0
 
 require (
 	github.com/go-co-op/gocron v1.31.0
@@ -15,7 +15,7 @@ require (
 
 require (
 	github.com/ProtonMail/go-crypto v0.0.0-20230217124315-7d5c6f04bbb8 // indirect
-	github.com/cloudflare/circl v1.3.7 // indirect
+	github.com/cloudflare/circl v1.6.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
