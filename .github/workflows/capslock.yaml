@@ -1,0 +1,52 @@
+name: Dependency Capability Scanner
+
+on:
+  pull_request:
+
+jobs:
+  capslock:
+    name: Run capslock
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.event.pull_request.base.ref }}:${{ github.event.pull_request.base.ref }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+
+      - name: Install capslock
+        run: go install github.com/google/capslock/cmd/capslock@latest
+
+      - name: Install capslock-git-diff
+        run: go install github.com/google/capslock/cmd/capslock-git-diff@latest
+
+      - name: Run capslock-git-diff
+        run: capslock-git-diff -v ${{ github.event.pull_request.base.ref }} . > capslock-output
+
+      - name: Prepare comment
+        if: failure()
+        run: |
+          {
+          echo "### Dependency Capability Scanner Results"
+          echo "Found new capabilities being used by the dependency changes in this PR. Please review them to make sure they are safe!"
+          echo ""
+          cat capslock-output
+          } > final-output
+
+      - name: Create comment
+        if: failure()
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: final-output
+          edit-mode: replace
